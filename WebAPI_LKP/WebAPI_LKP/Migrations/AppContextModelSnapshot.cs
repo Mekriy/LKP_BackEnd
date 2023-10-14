@@ -3,13 +3,12 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAPI_LKP.Models;
 
 #nullable disable
 
 namespace WebAPI_LKP.Migrations
 {
-    [DbContext(typeof(Models.AppContext))]
+    [DbContext(typeof(DbContexts.AppContext))]
     partial class AppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
