@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAPI_LKP.Models;
 
 #nullable disable
 
 namespace WebAPI_LKP.Migrations
 {
-    [DbContext(typeof(Models.AppContext))]
+    [DbContext(typeof(DbContexts.AppContext))]
     [Migration("20231011132404_ver1")]
     partial class ver1
     {

@@ -1,22 +1,34 @@
 ﻿using WebAPI_LKP.Models;
+using WebAPI_LKP.Interfaces;
 
 namespace WebAPI_LKP.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
-        public IEnumerable<Product> AllProducts =>
-            new List<Product>
+        readonly DbContexts.AppContext context;
+        public ProductRepository(DbContexts.AppContext context)
+        {
+            this.context = context;
+        }
+
+        public IEnumerable<Product> AllProducts 
+        { 
+            get 
             {
-                new Product() {ProductName = "Tom Yam", Price = 150, Image = " "},
-                new Product() {ProductName = "Margarita", Price = 160, Image = " "},
-                new Product() {ProductName = "Salami&Telatina", Price = 200, Image = " "},
-                new Product() {ProductName = "Carbonara", Price = 390, Image = " "},
-                new Product() {ProductName = "Peperoni light", Price = 290, Image = " "}
-            };
+                return context.Products.Where(p => p.IsAvailable == true);
+            }
+        }
 
         public Product? GetProductById(Guid productId)
         {
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
+
+        public IEnumerable<Product> GetProductsList =>
+            new List<Product>
+            {
+
+            };
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI_LKP.Models;
 
-namespace WebAPI_LKP.Models
+namespace WebAPI_LKP.DbContexts
 {
     public class AppContext : DbContext
     {
