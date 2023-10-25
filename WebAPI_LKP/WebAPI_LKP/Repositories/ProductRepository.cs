@@ -24,11 +24,5 @@ namespace WebAPI_LKP.Repositories
             return AllProducts.FirstOrDefault(p => p.Id == productId);
         }
 
-        public IEnumerable<Product> GetProductsList =>
-            new List<Product>
-            {
-
-            };
-
     }
 }
