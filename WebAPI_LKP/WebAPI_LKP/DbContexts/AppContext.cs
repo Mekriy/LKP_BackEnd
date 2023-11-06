@@ -7,7 +7,10 @@ namespace WebAPI_LKP.DbContexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // Олесь
             optionsBuilder.UseSqlite("Data Source=D:\\STUDY3\\ЛАБИ\\проект\\Dzhgut\\LKP_BackEnd\\WebAPI_LKP\\DzhgutDb.db");
+            // Анлрій
+            //optionsBuilder.UseSqlite("Data Source=\\DzhgutDb.db");
         }
 
         public DbSet<User> Users { get; set; }

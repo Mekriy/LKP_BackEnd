@@ -1,3 +1,5 @@
+using WebAPI_LKP.DbContexts;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -22,5 +24,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//DbInitializer.Seed(app);
 
 app.Run();
