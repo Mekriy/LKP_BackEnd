@@ -10,6 +10,7 @@ namespace WebAPI_LKP.Repositories
         {
             context = new DbContexts.AppContext();
         }
+
         public IEnumerable<User> AllUsers
         {
             get
@@ -18,23 +19,19 @@ namespace WebAPI_LKP.Repositories
             }
         }
 
-        public IEnumerable<User> AllAdmins
-        {
-            get
-            {
-                return AllUsers.Where(u => u.IsAdmin == true);
-            }
-        }
-
         public bool DoUserExist(User user)
         {
-            return true; // доробити :)
+            bool flag = false;
+            foreach (var u in AllUsers) 
+            {
+                if (u.Id == user.Id) { flag = true; break; }
+            }
+            return flag;
         }
 
         public User? GetUserById(Guid userId) 
         {
-            AllUsers.FirstOrDefault(u => u.Id == userId);
-            return null; 
+            return AllUsers.FirstOrDefault(u => u.Id == userId);
         }
     }
 }

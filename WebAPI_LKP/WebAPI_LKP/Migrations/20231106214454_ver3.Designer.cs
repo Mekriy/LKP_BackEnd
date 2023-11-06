@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI_LKP.DbContexts;
 
@@ -10,9 +11,10 @@ using WebAPI_LKP.DbContexts;
 namespace WebAPI_LKP.Migrations
 {
     [DbContext(typeof(DbContexts.AppContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20231106214454_ver3")]
+    partial class ver3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.23");

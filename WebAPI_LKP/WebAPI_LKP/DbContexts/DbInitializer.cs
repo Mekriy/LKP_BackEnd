@@ -5,10 +5,12 @@ namespace WebAPI_LKP.DbContexts
 {
     public class DbInitializer
     {
-        public static void SeedProducts(IApplicationBuilder applicationBuilder)
+        public static void Seed(IApplicationBuilder applicationBuilder)
         {
-            AppContext context = applicationBuilder.ApplicationServices.CreateScope().
-                ServiceProvider.GetRequiredService<AppContext>();
+            //AppContext context = applicationBuilder.ApplicationServices.CreateScope().
+            //    ServiceProvider.GetRequiredService<AppContext>();
+
+            AppContext context = new AppContext();
 
             if (!context.Products.Any())
             {
@@ -24,7 +26,7 @@ namespace WebAPI_LKP.DbContexts
                     new Product() { ProductName = "Лимонад Rose Fentimans", Price = 120, Description = "Створений із чистої рожевої олії, отриманої в болгарській долині Казанлик та свіжого лимонного соку", Image = "https://php.ninjapizza.com.ua/images/128/l2x.webp?ver=v1.0.7" }, 
                     new Product() { ProductName = "Coca-Cola", Price = 40, Description = "Цей напій магія смаку, неповторний смак, унікальна рецептура, неповторна форма упаковки", Image = "https://php.ninjapizza.com.ua/images/128/l2x.webp?ver=v1.0.7" },
                     new Product() { ProductName = "Живчик", Price = 35, Description = "Містить натуральний яблучний сік і екстракт ехінацеї. Напій збагачений мікроелементами та вітамінами", Image = "https://content.silpo.ua/sku/ecommerce/0/480x480wwm/1158_480x480wwm_a1d28fa7-936a-6a28-1853-8b556d306842.png" }
-                    //new Product() { ProductName = "", Price = 0, Description = "", Image = "" }
+                    //new Product() { ProductName = "", Price = 0, Description = "", Image = "", Order = null, OrderId = null }
                     );
             }
 
