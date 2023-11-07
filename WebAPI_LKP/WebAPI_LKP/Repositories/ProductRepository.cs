@@ -1,5 +1,5 @@
 ﻿using WebAPI_LKP.Models;
-using WebAPI_LKP.Interfaces;
+using WebAPI_LKP.Interfaces.Repositories;
 
 namespace WebAPI_LKP.Repositories
 {
