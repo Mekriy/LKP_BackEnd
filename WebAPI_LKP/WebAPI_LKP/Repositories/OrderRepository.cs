@@ -1,4 +1,4 @@
-﻿using WebAPI_LKP.Interfaces;
+﻿using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Models;
 
 namespace WebAPI_LKP.Repositories
