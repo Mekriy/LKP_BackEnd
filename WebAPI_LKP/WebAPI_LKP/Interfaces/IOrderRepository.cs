@@ -4,8 +4,10 @@ namespace WebAPI_LKP.Interfaces
 {
     public interface IOrderRepository
     {
-        IEnumerable<Order> AllOrders {  get; }
-        Order? GetOrderById(Guid orderId);
+        void AddToOrder(Order order, Product product);
+        void RemoveFromOrder(Order order, Product product);
+        void ClearOrder(Order order);
         double CalculateTotalPrice(Order order);
+        Order? GetOrderById(Guid orderId);
     }
 }

@@ -3,7 +3,7 @@
 namespace WebAPI_LKP.Controllers
 {
     [ApiController]
-    [Route("api/[controller")]
+    [Route("api/[controller]")]
     public class OrderController : Controller
     {
         //service for safety use in http endpoints
