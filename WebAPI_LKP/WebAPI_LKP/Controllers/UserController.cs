@@ -9,6 +9,7 @@ namespace WebAPI_LKP.Controllers
     {
         //create service for this controller
         //Use service for safety logic in http endpoints
+        [HttpGet]
         public IActionResult Index()
         {
             return View();

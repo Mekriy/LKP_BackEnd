@@ -7,6 +7,7 @@ namespace WebAPI_LKP.Controllers
     public class OrderController : Controller
     {
         //service for safety use in http endpoints
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
