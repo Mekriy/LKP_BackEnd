@@ -1,37 +1,41 @@
-﻿using WebAPI_LKP.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Models;
 
 namespace WebAPI_LKP.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        readonly DbContexts.AppContext context;
+        readonly DbContexts.LkpContext context;
         public UserRepository()
         {
-            context = new DbContexts.AppContext();
+            context = new DbContexts.LkpContext();
         }
 
-        public IEnumerable<User> AllUsers
+        public async Task<List<User>> GetAllUsers()
         {
-            get
-            {
-                return context.Users.Where(u => u != null);
-            }
+            return await context.Users.ToListAsync();
         }
 
-        public bool DoUserExist(User user)
+        public async Task<User> GetUser(string email)
         {
-            bool flag = false;
-            foreach (var u in AllUsers) 
-            {
-                if (u.Id == user.Id) { flag = true; break; }
-            }
-            return flag;
+            return await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
 
-        public User? GetUserById(Guid userId) 
+        public async Task<User?> GetUserById(Guid userId) 
         {
-            return AllUsers.FirstOrDefault(u => u.Id == userId);
+            return await context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<bool> DoUserExist(string email, string password)
+        {
+            return await context.Users.AnyAsync(u => u.Email == email && u.Password == password);
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            var saved = await context.SaveChangesAsync();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -4,10 +4,11 @@ namespace WebAPI_LKP.Interfaces.Repositories
 {
     public interface IOrderRepository
     {
-        void AddToOrder(Order order, Product product);
-        void RemoveFromOrder(Order order, Product product);
-        void ClearOrder(Order order);
-        double CalculateTotalPrice(Order order);
-        Order? GetOrderById(Guid orderId);
+        Task<bool> AddToOrder(Order order, Product product);
+        Task<bool> RemoveFromOrder(Order order, Product product);
+        Task<bool> ClearOrder(Order order);
+        Task<double> CalculateTotalPrice(Order order);
+        Task<Order?> GetOrderById(Guid orderId);
+        Task<bool> SaveAsync();
     }
 }
