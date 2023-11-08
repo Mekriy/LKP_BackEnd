@@ -9,6 +9,7 @@ using WebAPI_LKP.Services.RepositoryServices;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddTransient<DbInitializer>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -19,12 +20,26 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<WebAPI_LKP.DbContexts.AppContext>(options =>
+builder.Services.AddDbContext<LkpContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("LKP_db2"));
+    options.UseMySQL(builder.Configuration.GetConnectionString("LKP_db1"));
 });
 
 var app = builder.Build();
+
+if (args.Length == 1 && args[0].ToLower() == "seeddata")
+    SeedData(app);
+
+void SeedData(IHost app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<DbInitializer>();
+        service.SeedUsers();
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,6 +50,5 @@ app.UseRouting();
 app.UseHttpsRedirection();
 
 app.MapControllers();
-//DbInitializer.Seed(app);
 
 app.Run();
