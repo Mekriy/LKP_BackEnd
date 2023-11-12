@@ -13,7 +13,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             _userRepository = userRepository;
         }
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
             throw new NotImplementedException();
         }
@@ -25,7 +25,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
 
         public async Task<User?> GetUserByGuid(Guid UserGuid)
         {
-            return _userRepository.GetUserById(UserGuid);
+            return null; // _userRepository.GetUserById(UserGuid);
         }
 
         public Task<UserDTO?> GetUserDTO(string email)

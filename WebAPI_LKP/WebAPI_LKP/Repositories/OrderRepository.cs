@@ -1,59 +1,65 @@
-﻿using WebAPI_LKP.Interfaces.Repositories;
+﻿using System.Data.Entity;
+using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Models;
 
 namespace WebAPI_LKP.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        readonly DbContexts.AppContext context;
-        public OrderRepository(DbContexts.AppContext context)
+        readonly DbContexts.LkpContext context;
+        public OrderRepository(DbContexts.LkpContext context)
         {
             this.context = context;
         }
 
-        public void AddToOrder(Order order, Product product)
+        public async Task<bool> AddToOrder(Order order, Product product)
         {
-            if (context.Orders.SingleOrDefault(o => o.Id == order.Id) != null) 
+            var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
+
+            if (myOrder != null)
             {
-                context.Orders.SingleOrDefault(o => o.Id == order.Id).Products.Add(product);
+                myOrder.Products.Add(product);
+            }
+   
+            return await SaveAsync();
+        }
+
+        public async Task<bool> RemoveFromOrder(Order order, Product product)
+        {
+            var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
+
+            var myProduct = await context.Products.SingleOrDefaultAsync(p => p.Id == product.Id && p.OrderId == product.OrderId);
+
+            if (myOrder != null && myProduct != null) 
+            {
+                myOrder.Products.Remove(product);
             }
 
-            context.SaveChanges();
+            return await SaveAsync();
         }
 
-        public void RemoveFromOrder(Order order, Product product)
+        public async Task<bool>ClearOrder(Order order)
         {
-            if(context.Orders.SingleOrDefault(o => o.Id == order.Id) != null &&
-                context.Products.SingleOrDefault(p => p.Id == product.Id && p.OrderId == product.OrderId) != null)
+            var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
+
+            if (myOrder != null)
             {
-                context.Orders.SingleOrDefault(o => o.Id == order.Id).Products.Remove(
-                    context.Products.SingleOrDefault(p => p.Id == product.Id && p.OrderId == product.OrderId));
+                myOrder.Products.Clear();
             }
 
-            context.SaveChanges();
+            return await SaveAsync();
+        }
+        public async Task<Order?> GetOrderById(Guid orderId)
+        {
+            return await context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
-        public void ClearOrder(Order order)
+        public async Task<double> CalculateTotalPrice(Order order)
         {
-            if (context.Orders.SingleOrDefault(o => o.Id == order.Id) != null)
-            {
-                context.Orders.SingleOrDefault(o => o.Id == order.Id).Products.Clear();
-            }
-
-            context.SaveChanges();
-        }
-
-        public Order? GetOrderById(Guid orderId) 
-        {
-            return context.Orders.FirstOrDefault(o => o.Id == orderId);
-        }
-
-        public double CalculateTotalPrice(Order order) 
-        {
-            var myOrder = context.Orders.SingleOrDefault(o => o.Id == order.Id);
+            var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
 
             double totalPrice = 0;
-            if ( myOrder != null)
+            if (myOrder != null)
             {
                 foreach (var product in myOrder.Products)
                 {
@@ -62,6 +68,12 @@ namespace WebAPI_LKP.Repositories
             }
 
             return totalPrice;
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            var saved = await context.SaveChangesAsync();
+            return saved > 0 ? true : false;
         }
     }
 }

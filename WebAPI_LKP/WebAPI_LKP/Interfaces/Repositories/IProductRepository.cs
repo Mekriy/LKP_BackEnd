@@ -4,7 +4,7 @@ namespace WebAPI_LKP.Interfaces.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> AllProducts { get; }
-        Product? GetProductById(Guid id);
+        Task<List<Product>> GetAllProducts();
+        Task<Product?> GetProductById(Guid productId);
     }
 }
