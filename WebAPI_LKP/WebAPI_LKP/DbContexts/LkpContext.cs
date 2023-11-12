@@ -8,7 +8,9 @@ namespace WebAPI_LKP.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Олесь
-            optionsBuilder.UseMySQL("Server=localhost;database=DzhgutDb;user=root;password=root");
+            //optionsBuilder.UseMySQL("Server=localhost;database=DzhgutDb;user=root;password=root");
+            //Andrii
+            optionsBuilder.UseMySQL("Server=localhost;database=DzhgutDb;user=root;password=MyPassword54321");
         }
         public LkpContext(DbContextOptions<LkpContext> options) : base(options) { }
         public LkpContext() { }
