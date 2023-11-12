@@ -16,13 +16,14 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<LkpContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("LKP_db1"));
+    options.UseMySQL(builder.Configuration.GetConnectionString("LKP_db2"));
 });
 
 var app = builder.Build();
