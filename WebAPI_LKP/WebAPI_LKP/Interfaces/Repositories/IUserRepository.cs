@@ -8,6 +8,7 @@ namespace WebAPI_LKP.Interfaces.Repositories
         Task<User> GetUser(string email);
         Task<User?> GetUserById(Guid userId);
         Task<bool> DoUserExist(string email, string password);
+        Task<bool> AddUser(User user);
         Task<bool> SaveAsync();
     }
 }

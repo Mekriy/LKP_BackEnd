@@ -31,6 +31,12 @@ namespace WebAPI_LKP.Repositories
         {
             return await context.Users.AnyAsync(u => u.Email == email && u.Password == password);
         }
+        public async Task<bool> AddUser(User user)
+        {
+            context.Users.Add(user);
+            var saved = await context.SaveChangesAsync();
+            return saved > 0;
+        }
 
         public async Task<bool> SaveAsync()
         {
