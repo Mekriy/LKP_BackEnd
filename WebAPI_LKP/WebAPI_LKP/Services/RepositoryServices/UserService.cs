@@ -60,12 +60,10 @@ namespace WebAPI_LKP.Services.RepositoryServices
             return await _userRepository.DoUserExist(email, PasswordHash);
             //return await _userRepository.DoUserExist(email, password);
         }
-        public Task<bool> CreateUser(UserDTO userDto)
+        public async Task<bool> CreateUser(UserDTO userDto)
         {
             var user = _mapper.Map<User>(userDto);
-            //return await _userRepository.CreateUser(user);
-
-            throw new NotImplementedException();
+            return await _userRepository.AddUser(user);
         }
         public string HashPassword(string password)
         {
