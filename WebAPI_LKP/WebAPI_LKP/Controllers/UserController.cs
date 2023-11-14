@@ -14,8 +14,6 @@ namespace WebAPI_LKP.Controllers
         {
            _userService = userService;
         }
-        //create service for this controller
-        //Use service for safety logic in http endpoints
         [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser([FromQuery] string userEmail)
         {
@@ -53,14 +51,13 @@ namespace WebAPI_LKP.Controllers
                 return BadRequest("Password and confirmation password don't match!");
             
             userSignUp.Password = _userService.HashPassword(userSignUp.Password);
-            
-            //create and save user if not tell why
-            return Ok();
-        }
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser()
-        {   
-            return Ok();
+
+            if (await _userService.CreateUser(userSignUp))
+            {
+                return Ok("User successfully created! Now please log in");
+            }
+            else
+                return StatusCode(500, "Something went wrong while saving on server!");
         }
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser()
