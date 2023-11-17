@@ -6,12 +6,12 @@ namespace WebAPI_LKP.Interfaces.Services
     public interface IUserService
     {
         Task<User?> GetUser(string email);
-        Task<UserDTO?> GetUserDTO(string email);
+        Task<UserLoginDTO?> GetUserDTO(string email);
         Task<User?> GetUserByGuid(Guid UserGuid);
         Task<List<User>> GetAllUsers();
-        Task<List<UserDTO>> GetAllUsersDTO();
+        Task<List<UserLoginDTO>> GetAllUsersDTO();
 
-        Task<bool> CreateUser(UserDTO userDto);
+        Task<bool> CreateUser(UserSignUpDTO userDto);
         string HashPassword(string password);
         Task<bool> UserExist(string email, string password);
         Task<bool> NameOrEmailCheck(string name, string email);

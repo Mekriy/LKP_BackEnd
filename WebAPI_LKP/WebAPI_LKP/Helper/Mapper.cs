@@ -8,8 +8,10 @@ namespace WebAPI_LKP.Helper
     {
         public Mapper()
         {
-            CreateMap<User, UserDTO>();
-            CreateMap<UserDTO, User>();
+            CreateMap<User, UserLoginDTO>();
+            CreateMap<User, UserSignUpDTO>();
+            CreateMap<UserLoginDTO, User>();
+            CreateMap<UserSignUpDTO, User>();
 
             CreateMap<Product, ProductDTO>();
             CreateMap<ProductDTO, Product>();
