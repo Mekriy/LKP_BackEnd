@@ -22,10 +22,10 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             return await _userRepository.GetAllUsers();
         }
-        public async Task<List<UserDTO>> GetAllUsersDTO()
+        public async Task<List<UserLoginDTO>> GetAllUsersDTO()
         {
             var users = await _userRepository.GetAllUsers();
-            var usersDto = _mapper.Map<List<UserDTO>>(users);
+            var usersDto = _mapper.Map<List<UserLoginDTO>>(users);
             return usersDto;
         }
         public async Task<User?> GetUser(string email)
@@ -36,10 +36,10 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             return await _userRepository.GetUserById(UserGuid);
         }
-        public async Task<UserDTO?> GetUserDTO(string email)
+        public async Task<UserLoginDTO?> GetUserDTO(string email)
         {
             var user = await _userRepository.GetUser(email);
-            var userDto = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<UserLoginDTO>(user);
             return userDto;
         }
         public async Task<bool> NameOrEmailCheck(string name, string email)
@@ -58,11 +58,11 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             var PasswordHash = HashPassword(password);
             return await _userRepository.DoUserExist(email, PasswordHash);
-            //return await _userRepository.DoUserExist(email, password);
         }
-        public async Task<bool> CreateUser(UserDTO userDto)
+        public async Task<bool> CreateUser(UserSignUpDTO userSignUp)
         {
-            var user = _mapper.Map<User>(userDto);
+            var user = _mapper.Map<User>(userSignUp);
+            user.IsAdmin = false;
             return await _userRepository.AddUser(user);
         }
         public string HashPassword(string password)
