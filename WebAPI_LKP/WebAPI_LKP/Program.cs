@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<LkpContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("LKP_db2"));
+    options.UseMySQL(builder.Configuration.GetConnectionString("db"));
 });
 
 var app = builder.Build();

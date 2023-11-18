@@ -14,8 +14,6 @@ namespace WebAPI_LKP.Controllers
         {
            _userService = userService;
         }
-        //create service for this controller
-        //Use service for safety logic in http endpoints
         [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser([FromQuery] string userEmail)
         {
@@ -33,7 +31,7 @@ namespace WebAPI_LKP.Controllers
             return Ok(await _userService.GetAllUsersDTO());
         }
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] UserDTO userLogin)
+        public async Task<IActionResult> Login([FromBody] UserLoginDTO userLogin)
         {
             if (!await _userService.UserExist(userLogin.Email, userLogin.Password))
                 return NotFound("User doesn't exist!");
@@ -41,26 +39,22 @@ namespace WebAPI_LKP.Controllers
             return Ok();
         }
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] UserDTO userSignUp)
+        public async Task<IActionResult> SignUp([FromBody] UserSignUpDTO userSignUp)
         {
             if (await _userService.UserExist(userSignUp.Email, userSignUp.Password))
                 return NotFound("User already exists!");
 
             if (await _userService.NameOrEmailCheck(userSignUp.Name, userSignUp.Email))
                 return BadRequest("Name or Email is already used!");
-
-            if (userSignUp.Password != userSignUp.ConfirmPassword)
-                return BadRequest("Password and confirmation password don't match!");
             
             userSignUp.Password = _userService.HashPassword(userSignUp.Password);
-            
-            //create and save user if not tell why
-            return Ok();
-        }
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser()
-        {   
-            return Ok();
+
+            if (await _userService.CreateUser(userSignUp))
+            {
+                return Ok("User successfully created! Now please log in");
+            }
+            else
+                return StatusCode(500, "Something went wrong while saving on server!");
         }
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser()

@@ -34,8 +34,7 @@ namespace WebAPI_LKP.Repositories
         public async Task<bool> AddUser(User user)
         {
             context.Users.Add(user);
-            var saved = await context.SaveChangesAsync();
-            return saved > 0;
+            return await SaveAsync();
         }
 
         public async Task<bool> SaveAsync()
