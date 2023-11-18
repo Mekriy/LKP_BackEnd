@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.ComponentModel.DataAnnotations;
 using WebAPI_LKP.DbContexts;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
@@ -7,6 +10,19 @@ using WebAPI_LKP.Repositories;
 using WebAPI_LKP.Services.RepositoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+    };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<DbInitializer>();
@@ -49,6 +65,9 @@ if (app.Environment.IsDevelopment())
 }
 app.UseRouting();
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
