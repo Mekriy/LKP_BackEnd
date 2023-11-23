@@ -7,12 +7,21 @@ namespace WebAPI_LKP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowMyOrigins")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
            _userService = userService;
+        }
+        [HttpOptions]
+        public IActionResult PreflightRoute()
+        {
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:8080");
+            Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            return NoContent();
         }
         [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser([FromQuery] string userEmail)
