@@ -35,9 +35,15 @@ namespace WebAPI_LKP.Controllers
         }
 
         [HttpGet("GetUsers")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _userService.GetAllUsersDTO());
+            var users = await _userService.GetAllUsersDTO();
+            if (users == null || users.Count == 0)
+                return BadRequest("There are no tasks for this user!");
+            else
+                return Ok(users);
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLogin)
