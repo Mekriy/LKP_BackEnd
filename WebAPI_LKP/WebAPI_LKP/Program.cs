@@ -73,8 +73,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowMyOrigins");
 app.UseRouting();
+app.UseCors("AllowMyOrigins");
 app.UseHttpsRedirection();
 
 //app.UseAuthentication();

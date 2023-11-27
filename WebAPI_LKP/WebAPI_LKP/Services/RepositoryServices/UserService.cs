@@ -54,10 +54,14 @@ namespace WebAPI_LKP.Services.RepositoryServices
             return false;
 
         }
+
         public async Task<bool> UserExist(string email, string password)
         {
-            var PasswordHash = HashPassword(password);
-            return await _userRepository.DoUserExist(email, PasswordHash);
+            var user = await _userRepository.GetUser(email);
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+                return true;
+            else
+                return false;
         }
         public async Task<bool> CreateUser(UserSignUpDTO userSignUp)
         {
