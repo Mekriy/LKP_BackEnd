@@ -23,7 +23,6 @@ var builder = WebApplication.CreateBuilder(args);
 //});
 
 //builder.Services.AddAuthorization();
-
 builder.Services.AddControllers();
 builder.Services.AddTransient<DbInitializer>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
