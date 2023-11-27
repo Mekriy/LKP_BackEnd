@@ -11,19 +11,18 @@ using WebAPI_LKP.Services.RepositoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
-{
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-    };
-});
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+//{
+//    x.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//    };
+//});
 
-builder.Services.AddAuthorization();
-
+//builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddTransient<DbInitializer>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -40,6 +39,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LkpContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("db"));
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowMyOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:8080", "http://127.0.0.1:8080")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
@@ -63,11 +72,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowMyOrigins");
 app.UseRouting();
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.MapControllers();
 
