@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
@@ -10,7 +11,6 @@ namespace WebAPI_LKP.Services.RepositoryServices
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-
         public UserService(
             IUserRepository userRepository,
             IMapper mapper)
