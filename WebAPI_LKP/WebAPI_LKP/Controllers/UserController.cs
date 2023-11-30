@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Services;
 
@@ -7,12 +9,18 @@ namespace WebAPI_LKP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    [EnableCors("AllowMyOrigins")]
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
            _userService = userService;
+        }
+        [HttpOptions]
+        public IActionResult PreflightRoute()
+        {
+            return NoContent();
         }
         [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser([FromQuery] string userEmail)
@@ -26,18 +34,28 @@ namespace WebAPI_LKP.Controllers
         }
 
         [HttpGet("GetUsers")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _userService.GetAllUsersDTO());
+            var users = await _userService.GetAllUsersDTO();
+            if (users == null || users.Count == 0)
+                return BadRequest("There are no tasks for this user!");
+            else
+                return Ok(users);
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLogin)
         {
             if (!await _userService.UserExist(userLogin.Email, userLogin.Password))
                 return NotFound("User doesn't exist!");
 
+            var user = await _userService.GetUser(userLogin.Email);
+
             return Ok();
         }
+        [AllowAnonymous]
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp([FromBody] UserSignUpDTO userSignUp)
         {

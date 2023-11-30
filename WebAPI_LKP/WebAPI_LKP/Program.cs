@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using WebAPI_LKP.DbContexts;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
@@ -11,18 +12,6 @@ using WebAPI_LKP.Services.RepositoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
-{
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-    };
-});
-
-builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<DbInitializer>();
@@ -41,6 +30,33 @@ builder.Services.AddDbContext<LkpContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("db"));
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowMyOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:8080", "http://127.0.0.1:8080")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration["JWT:Key"]))
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -63,7 +79,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseRouting();
+app.UseCors("AllowMyOrigins");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
