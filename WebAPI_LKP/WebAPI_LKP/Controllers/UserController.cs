@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Services;
 
@@ -8,7 +10,7 @@ namespace WebAPI_LKP.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowMyOrigins")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         public UserController(IUserService userService)
@@ -18,9 +20,6 @@ namespace WebAPI_LKP.Controllers
         [HttpOptions]
         public IActionResult PreflightRoute()
         {
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:8080");
-            Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
             return NoContent();
         }
         [HttpGet("GetUser")]
@@ -45,14 +44,18 @@ namespace WebAPI_LKP.Controllers
             else
                 return Ok(users);
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLogin)
         {
             if (!await _userService.UserExist(userLogin.Email, userLogin.Password))
                 return NotFound("User doesn't exist!");
 
+            var user = await _userService.GetUser(userLogin.Email);
+
             return Ok();
         }
+        [AllowAnonymous]
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp([FromBody] UserSignUpDTO userSignUp)
         {

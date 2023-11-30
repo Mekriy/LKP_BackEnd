@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using WebAPI_LKP.DbContexts;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
@@ -11,18 +12,7 @@ using WebAPI_LKP.Services.RepositoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
-//{
-//    x.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = true,
-//        ValidateAudience = true,
-//        ValidateLifetime = true,
-//        ValidateIssuerSigningKey = true,
-//    };
-//});
 
-//builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddTransient<DbInitializer>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -51,6 +41,23 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration["JWT:Key"]))
+        };
+    });
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
@@ -77,8 +84,8 @@ app.UseRouting();
 app.UseCors("AllowMyOrigins");
 app.UseHttpsRedirection();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
