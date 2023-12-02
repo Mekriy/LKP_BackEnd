@@ -59,7 +59,9 @@ namespace WebAPI_LKP.Services.RepositoryServices
         public async Task<bool> UserExist(string email, string password)
         {
             var user = await _userRepository.GetUser(email);
+
             if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+
                 return true;
             else
                 return false;
