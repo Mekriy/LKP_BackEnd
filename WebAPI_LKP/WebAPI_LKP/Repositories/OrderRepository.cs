@@ -16,10 +16,10 @@ namespace WebAPI_LKP.Repositories
         {
             var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
 
-            if (myOrder != null)
-            {
-                myOrder.Products.Add(product);
-            }
+            //if (myOrder != null)
+            //{
+            //    myOrder.Products.Add(product);
+            //}
    
             return await SaveAsync();
         }
@@ -30,10 +30,10 @@ namespace WebAPI_LKP.Repositories
 
             var myProduct = await context.Products.SingleOrDefaultAsync(p => p.Id == product.Id && p.OrderId == product.OrderId);
 
-            if (myOrder != null && myProduct != null) 
-            {
-                myOrder.Products.Remove(product);
-            }
+            //if (myOrder != null && myProduct != null) 
+            //{
+            //    myOrder.Products.Remove(product);
+            //}
 
             return await SaveAsync();
         }
@@ -42,32 +42,17 @@ namespace WebAPI_LKP.Repositories
         {
             var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
 
-            if (myOrder != null)
-            {
-                myOrder.Products.Clear();
-            }
+            //if (myOrder != null)
+            //{
+            //    myOrder.Products.Clear();
+            //}
 
             return await SaveAsync();
         }
+
         public async Task<Order?> GetOrderById(Guid orderId)
         {
             return await context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
-        }
-
-        public async Task<double> CalculateTotalPrice(Order order)
-        {
-            var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
-
-            double totalPrice = 0;
-            if (myOrder != null)
-            {
-                foreach (var product in myOrder.Products)
-                {
-                    totalPrice += product.Price;
-                }
-            }
-
-            return totalPrice;
         }
 
         public async Task<bool> SaveAsync()

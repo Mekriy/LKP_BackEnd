@@ -4,6 +4,7 @@ using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Models.Enums;
 
 namespace WebAPI_LKP.Services.RepositoryServices
 {
@@ -47,7 +48,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
             var user = await _userRepository.GetUser(email);
             if(user==null)
                 return false;
-            if(user.Email== email || user.Name == name)
+            if(user.Email== email || user.UserName == name)
             {
                 return true;
             }
@@ -58,7 +59,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
         public async Task<bool> UserExist(string email, string password)
         {
             var user = await _userRepository.GetUser(email);
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 return true;
             else
                 return false;
@@ -66,7 +67,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
         public async Task<bool> CreateUser(UserSignUpDTO userSignUp)
         {
             var user = _mapper.Map<User>(userSignUp);
-            user.IsAdmin = false;
+            user.Role = Roles.User ;
             return await _userRepository.AddUser(user);
         }
         public string HashPassword(string password)

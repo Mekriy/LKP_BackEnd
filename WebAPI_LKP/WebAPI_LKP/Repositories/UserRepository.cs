@@ -29,7 +29,7 @@ namespace WebAPI_LKP.Repositories
 
         public async Task<bool> DoUserExist(string email, string password)
         {
-            return await context.Users.AnyAsync(u => u.Email == email && u.Password == password);
+            return await context.Users.AnyAsync(u => u.Email == email && u.PasswordHash == password);
         }
         public async Task<bool> AddUser(User user)
         {

@@ -1,5 +1,6 @@
 ﻿using System.IO.Pipelines;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Models.Enums;
 
 namespace WebAPI_LKP.DbContexts
 {
@@ -23,6 +24,14 @@ namespace WebAPI_LKP.DbContexts
                     new Product() { ProductName = "Carbonara", Price = 350, Description = "Тісто з чотирьох видів борошна, моцарела, пармезан, цибуля фрі, бекон", Image = "https://php.ninjapizza.com.ua/images/21/l2x.webp?ver=v1.0.7" },
                     new Product() { ProductName = "Peporni light", Price = 400, Description = "Тісто з чотирьох видів борошна, перетерті томати пелаті, моцарела, салямі «Наполі»", Image = "https://php.ninjapizza.com.ua/images/1/l2x.webp?ver=v1.0.7" },
 
+                    new Product() { ProductName = "Піца з креветками і солодким чилі", Price = 320, Description = "Рибний соус, тісто з чотирьох видів борошна, моцарела, сир з червоним песто", Image = "https://php.ninjapizza.com.ua/images/1/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Пепероні з гострим медом", Price = 345, Description = "Тісто з чотирьох видів борошна, перетерті томати пелаті, моцарела, пепероні", Image = "https://php.ninjapizza.com.ua/images/10/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Кватро Формаджі з цибулевим мармеладом", Price = 360, Description = "Тісто з чотирьох видів борошна, соус на основі збитих вершків, моцарела, сир з червоним песто", Image = "https://php.ninjapizza.com.ua/images/12/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Піца з ковбасками і чеддером фламбе", Price = 390, Description = "Тісто з чотирьох видів борошна, перетерті томати пелаті, моцарела, ковбаски", Image = "https://php.ninjapizza.com.ua/images/4/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Піца з італійським беконом і грибами", Price = 310, Description = "Тісто з чотирьох видів борошна, моцарела, пармезан, соус на основі збитих вершків", Image = "https://php.ninjapizza.com.ua/images/20/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Піца по-селянськи з беконом", Price = 300, Description = "Тісто з чотирьох видів борошна, моцарела, пармезан, соус на основі збитих вершків", Image = "https://php.ninjapizza.com.ua/images/23/l2x.webp?ver=v1.0.7" },
+                    new Product() { ProductName = "Піца з пряним суджуком і рікотою", Price = 370, Description = "Тісто з чотирьох видів борошна, моцарела, пармезан, соус на основі збитих вершків", Image = "https://php.ninjapizza.com.ua/images/25/l2x.webp?ver=v1.0.7" },
+
                     new Product() { ProductName = "Coca-Cola Vanilla 0.33", Price = 50, Description = "Coca-Cola Vanilla - прохолодний газований напій від бренду Coca-Cola з насиченим ванільним смаком", Image = "https://php.ninjapizza.com.ua/images/134/l2x.webp?ver=v1.0.7" },
                     new Product() { ProductName = "Лимонад Rose Fentimans", Price = 120, Description = "Створений із чистої рожевої олії, отриманої в болгарській долині Казанлик та свіжого лимонного соку", Image = "https://php.ninjapizza.com.ua/images/128/l2x.webp?ver=v1.0.7" },
                     new Product() { ProductName = "Coca-Cola", Price = 40, Description = "Цей напій магія смаку, неповторний смак, унікальна рецептура, неповторна форма упаковки", Image = "https://php.ninjapizza.com.ua/images/128/l2x.webp?ver=v1.0.7" },
@@ -40,9 +49,9 @@ namespace WebAPI_LKP.DbContexts
             {
                 var users = new List<User>()
                 {
-                    new User() {Name="Oles", Email="oles@gamil.com", Password="1234", IsAdmin=true},
-                    new User() {Name="Andriy", Email="andriy@gamil.com", Password="1234", IsAdmin=true},
-                    new User() {Name="Dima", Email="dima@gamil.com", Password="1234", IsAdmin=true}
+                    new User() {UserName="Oles", Email="oles@gamil.com", PasswordHash="1234", Role = Roles.Admin},
+                    new User() {UserName="Andriy", Email="andriy@gamil.com", PasswordHash="1234", Role = Roles.Admin},
+                    new User() {UserName="Dima", Email="dima@gamil.com", PasswordHash="1234", Role = Roles.Admin}
                 };
 
                 context.Users.AddRange(users);

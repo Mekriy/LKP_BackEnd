@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using WebAPI_LKP.Models.Enums;
 
 namespace WebAPI_LKP.Models
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public Guid Id { get; set; }
-        [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
-        [MaxLength(70)]
-        public string Email { get; set; } = string.Empty;
-        [MaxLength(70)]
-        public string Password { get; set; } = string.Empty;
-        public bool IsAdmin { get; set; }
-        public List<Order> Orders { get; set; } = null!;
+        public Roles Role { get; set; } = Roles.User;
+        public List<Order> Orders { get; set; }
     }
 }
