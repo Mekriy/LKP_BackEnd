@@ -7,7 +7,6 @@ namespace WebAPI_LKP.Interfaces.Repositories
         Task<bool> AddToOrder(Order order, Product product);
         Task<bool> RemoveFromOrder(Order order, Product product);
         Task<bool> ClearOrder(Order order);
-        Task<double> CalculateTotalPrice(Order order);
         Task<Order?> GetOrderById(Guid orderId);
         Task<bool> SaveAsync();
     }

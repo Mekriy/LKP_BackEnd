@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using WebAPI_LKP.Models;
+﻿using WebAPI_LKP.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebAPI_LKP.DbContexts
 {
-    public class LkpContext : DbContext
+    public class LkpContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public LkpContext(DbContextOptions<LkpContext> options) : base(options) { }
         public LkpContext() { }
