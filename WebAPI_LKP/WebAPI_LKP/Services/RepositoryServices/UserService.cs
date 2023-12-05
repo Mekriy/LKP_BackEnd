@@ -77,7 +77,6 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
-
                 return true;
             else
                 return false;
@@ -88,7 +87,6 @@ namespace WebAPI_LKP.Services.RepositoryServices
         }
         public async Task<bool> CreateUser(UserSignUpDTO userSignUp)
         {
-
             var user = new User()
             {
                 UserName = userSignUp.Name,
