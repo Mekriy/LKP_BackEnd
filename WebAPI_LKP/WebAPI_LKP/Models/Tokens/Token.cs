@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAPI_LKP.Models
+namespace WebAPI_LKP.Models.Tokens
 {
     public class Token
     {
