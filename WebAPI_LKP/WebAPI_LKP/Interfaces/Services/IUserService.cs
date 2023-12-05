@@ -1,5 +1,6 @@
 ﻿using WebAPI_LKP.DTO;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Services.Authentication;
 
 namespace WebAPI_LKP.Interfaces.Services
 {
@@ -15,6 +16,9 @@ namespace WebAPI_LKP.Interfaces.Services
         Task<bool> UserExist(string email);
         Task<bool> CheckPassword(User user, string password);
         Task<bool> NameOrEmailCheck(string name, string email);
-        Task<string> GenerateJwtToken(User user);
+        Task<AuthResult> GenerateJwtToken(User user);
+        string RandomStringGeneration(int length);
+        Task<AuthResult> VerifyAndGenerateToken(TokenRequest tokenRequest);
+        DateTime UnixTimeStampToDateTime(long unixTimeStamp);
     }
 }

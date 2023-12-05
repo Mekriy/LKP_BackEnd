@@ -47,6 +47,20 @@ builder.Services.AddCors(options =>
     });
 });
 
+var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]));
+var tokenValidationParams = new TokenValidationParameters
+{
+    ValidateIssuer = false, // to change in future
+    ValidateAudience = false, // same
+                              //ValidIssuer = builder.Configuration["JWT:Issuer"],
+                              //ValidAudience = builder.Configuration["JWT:Audience"],
+
+    RequireExpirationTime = false, // change with refresh token
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = secretKey
+};
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,21 +70,10 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = false, // to change in future
-        ValidateAudience = false, // same
-        //ValidIssuer = builder.Configuration["JWT:Issuer"],
-        //ValidAudience = builder.Configuration["JWT:Audience"],
-
-        RequireExpirationTime = false, // change with refresh token
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                    builder.Configuration["JWT:Key"]))
-    };
+    options.TokenValidationParameters = tokenValidationParams;
 });
 
+builder.Services.AddSingleton(tokenValidationParams);
 builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;
