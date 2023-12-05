@@ -77,6 +77,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
+
                 return true;
             else
                 return false;
@@ -87,6 +88,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
         }
         public async Task<bool> CreateUser(UserSignUpDTO userSignUp)
         {
+
             var user = new User()
             {
                 UserName = userSignUp.Name,
@@ -148,6 +150,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
             var random = new Random();
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz_";
             return new string(Enumerable.Repeat(chars, length).Select(x => x[random.Next(x.Length)]).ToArray());
+
         }
         public async Task<AuthResult> VerifyAndGenerateToken(TokenRequest tokenRequest)
         {
