@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using WebAPI_LKP.Models.Enums;
 
 namespace WebAPI_LKP.Models

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Models.Tokens;
 
 namespace WebAPI_LKP.Repositories
 {
@@ -42,5 +43,25 @@ namespace WebAPI_LKP.Repositories
             var saved = await context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+        public async Task<bool> CreateRefreshToken(RefreshToken refreshToken)
+        {
+            context.RefreshTokens.Add(refreshToken);
+            return await SaveAsync();
+        }
+
+        public async Task<RefreshToken?> FindRefreshToken(string token)
+        {
+            var mytoken = context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
+
+            return await mytoken;
+        }
+
+        public async Task<bool> UpdateRefreshToken(RefreshToken refreshToken)
+        {
+            context.RefreshTokens.Update(refreshToken);
+            return await SaveAsync();
+        }
+
+
     }
 }

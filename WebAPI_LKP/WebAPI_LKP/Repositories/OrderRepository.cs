@@ -16,10 +16,10 @@ namespace WebAPI_LKP.Repositories
         {
             var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
 
-            //if (myOrder != null)
-            //{
-            //    myOrder.Products.Add(product);
-            //}
+            if (myOrder != null)
+            {
+                myOrder.ProductId = product.Id;
+            }
    
             return await SaveAsync();
         }
@@ -30,10 +30,10 @@ namespace WebAPI_LKP.Repositories
 
             var myProduct = await context.Products.SingleOrDefaultAsync(p => p.Id == product.Id && p.OrderId == product.OrderId);
 
-            //if (myOrder != null && myProduct != null) 
-            //{
-            //    myOrder.Products.Remove(product);
-            //}
+            if (myOrder != null && myProduct != null) 
+            {
+                myOrder.ProductId = Guid.Empty;
+            }
 
             return await SaveAsync();
         }
@@ -42,10 +42,10 @@ namespace WebAPI_LKP.Repositories
         {
             var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
 
-            //if (myOrder != null)
-            //{
-            //    myOrder.Products.Clear();
-            //}
+            if (myOrder != null)
+            {
+                myOrder.ProductId = Guid.Empty;
+            }
 
             return await SaveAsync();
         }
