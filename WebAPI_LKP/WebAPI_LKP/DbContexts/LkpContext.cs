@@ -11,7 +11,7 @@ namespace WebAPI_LKP.DbContexts
         public LkpContext() { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("Server=localhost;database=DzhgutDb;user=root;password=MyPassword54321");
+            optionsBuilder.UseMySQL("INSERT DB LINK HERE");
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
