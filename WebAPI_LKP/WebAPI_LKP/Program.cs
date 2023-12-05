@@ -1,5 +1,8 @@
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +10,9 @@ using System.Text;
 using WebAPI_LKP.DbContexts;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
+using WebAPI_LKP.Models;
 using WebAPI_LKP.Repositories;
+using WebAPI_LKP.Services.Authentication.Verifications;
 using WebAPI_LKP.Services.RepositoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +26,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddEndpointsApiExplorer();
@@ -41,21 +47,39 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                builder.Configuration["JWT:Key"]))
-        };
-    });
+var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]));
+var tokenValidationParams = new TokenValidationParameters
+{
+    ValidateIssuer = false, // to change in future
+    ValidateAudience = false, // same
+                              //ValidIssuer = builder.Configuration["JWT:Issuer"],
+                              //ValidAudience = builder.Configuration["JWT:Audience"],
+
+    RequireExpirationTime = false, // change with refresh token
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = secretKey
+};
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.TokenValidationParameters = tokenValidationParams;
+});
+
+builder.Services.AddSingleton(tokenValidationParams);
+builder.Services.AddDefaultIdentity<User>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = false;
+})
+    .AddEntityFrameworkStores<LkpContext>();
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
