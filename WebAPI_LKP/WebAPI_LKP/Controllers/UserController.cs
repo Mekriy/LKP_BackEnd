@@ -144,11 +144,6 @@ namespace WebAPI_LKP.Controllers
             if (await _userService.CreateUser(userSignUp))
             {
                 var createdUser = await _userService.GetUser(userSignUp.Email);
-                //var token = _userService.GenerateJwtToken(userForToken);
-                //if(token == null)
-                //    return StatusCode(500, "Something went wrong while creating token!");
-                //else
-                //    return Ok(token);
                 if (await _emailService.SendEmail(createdUser))
                     return Ok("Email verification has been sent!");
                 else
@@ -204,6 +199,7 @@ namespace WebAPI_LKP.Controllers
             else
                 return Content(VerificationHtmls.htmlFailVerification, "text/html");
         }
+        [AllowAnonymous]
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
         {
@@ -220,15 +216,8 @@ namespace WebAPI_LKP.Controllers
 
             var result = await _userService.VerifyAndGenerateToken(tokenRequest);
 
-            if (result == null)
-                return BadRequest(new AuthResult()
-                {
-                    Errors = new List<string>()
-                    {
-                        "Invalid tokens"
-                    },
-                    Result = false
-                });
+            if (result.Result == false)
+                return BadRequest(result);
 
             return Ok(result);
         }
