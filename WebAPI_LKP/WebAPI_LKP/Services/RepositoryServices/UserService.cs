@@ -9,6 +9,7 @@ using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Models.Tokens;
 using WebAPI_LKP.Models.Enums;
 using WebAPI_LKP.Services.Authentication;
 
@@ -113,17 +114,16 @@ namespace WebAPI_LKP.Services.RepositoryServices
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Email, value: user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, value: DateTime.Now.ToUniversalTime().ToString())
+                    new Claim(JwtRegisteredClaimNames.Iat, value: DateTime.Now.ToUniversalTime().ToString()),
                 }),
-                Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_configuration.GetSection("JWT:ExpityTimeFrame").Value)),
+                Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_configuration.GetSection("JWT:ExpiryTimeFrame").Value)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescripter);
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
-            //refreshtoken model
-            var refreshToken = new
+            var refreshToken = new RefreshToken()
             {
                 JwtId = token.Id,
                 Token = RandomStringGeneration(23),
@@ -131,10 +131,10 @@ namespace WebAPI_LKP.Services.RepositoryServices
                 ExpiryDate = DateTime.UtcNow.AddMonths(6),
                 IsRevoked = false,
                 IsUsed = false,
-                UserId = user.Id
+                UserId = user.Id.ToString()
             };
-            //create it on server
-            //await _userRepository.CreateRefreshToken(refreshToken)
+
+            await _userRepository.CreateRefreshToken(refreshToken);
             
             return new AuthResult()
             {
@@ -156,8 +156,6 @@ namespace WebAPI_LKP.Services.RepositoryServices
 
             try
             {
-                _tokenValidationParameters.ValidateLifetime = false; //for testing, back true later
-
                 var tokenInVerification = jwtTokenHandler.ValidateToken(tokenRequest.Token, 
                     _tokenValidationParameters,
                     out var validatedToken);
@@ -184,8 +182,8 @@ namespace WebAPI_LKP.Services.RepositoryServices
                         }
                     };
 
-                //var storedToken = await _userRepository.FindRefreshToken(tokenRequest.Token);
-                /*
+                var storedToken = await _userRepository.FindRefreshToken(tokenRequest.RefreshToken);
+                
                  if(storedToken == null)
                    return new AuthResult()
                     {
@@ -195,8 +193,8 @@ namespace WebAPI_LKP.Services.RepositoryServices
                             "Invalid tokens"
                         }
                     };
-                 */
-                /*
+                 
+                
                  if(storedToken.IsUsed)
                     return new AuthResult()
                     {
@@ -216,7 +214,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
                         }
                     };
                 var jti = tokenInVerification.Claims.
-                    FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value);
+                    FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
                 if(storedToken.JwtId != jti)
                     return new AuthResult()
@@ -242,15 +240,6 @@ namespace WebAPI_LKP.Services.RepositoryServices
                 
                 var dbUser = await _userManager.FindByIdAsync(storedToken.UserId);
                 return await GenerateJwtToken(dbUser);
-                */
-
-                //delete it because I return generateJWTtoken in 243 line
-                return new AuthResult()
-                {
-                    Result = true,
-                    Token = "asd",
-                    RefreshToken = "asd"
-                };
             }
             catch (Exception)
             {

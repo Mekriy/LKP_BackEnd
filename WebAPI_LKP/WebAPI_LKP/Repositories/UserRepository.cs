@@ -51,9 +51,7 @@ namespace WebAPI_LKP.Repositories
 
         public async Task<RefreshToken?> FindRefreshToken(string token)
         {
-            var mytoken = context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
-
-            return await mytoken;
+            return await context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
         }
 
         public async Task<bool> UpdateRefreshToken(RefreshToken refreshToken)
@@ -61,7 +59,5 @@ namespace WebAPI_LKP.Repositories
             context.RefreshTokens.Update(refreshToken);
             return await SaveAsync();
         }
-
-
     }
 }
