@@ -50,6 +50,7 @@ builder.Services.AddCors(options =>
 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]));
 var tokenValidationParams = new TokenValidationParameters
 {
+
     ValidateAudience = false,
     ValidateIssuer = false,
     RequireExpirationTime = true,

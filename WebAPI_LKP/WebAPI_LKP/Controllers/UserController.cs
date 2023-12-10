@@ -144,6 +144,7 @@ namespace WebAPI_LKP.Controllers
             if (await _userService.CreateUser(userSignUp))
             {
                 var createdUser = await _userService.GetUser(userSignUp.Email);
+                
                 if (await _emailService.SendEmail(createdUser))
                     return Ok("Email verification has been sent!");
                 else
@@ -199,6 +200,7 @@ namespace WebAPI_LKP.Controllers
             else
                 return Content(VerificationHtmls.htmlFailVerification, "text/html");
         }
+        
         [AllowAnonymous]
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
@@ -218,6 +220,7 @@ namespace WebAPI_LKP.Controllers
 
             if (result.Result == false)
                 return BadRequest(result);
+
 
             return Ok(result);
         }
