@@ -19,6 +19,7 @@ namespace WebAPI_LKP.Interfaces.Services
         Task<AuthResult> GenerateJwtToken(User user);
         string RandomStringGeneration(int length);
         Task<AuthResult> VerifyAndGenerateToken(TokenRequest tokenRequest);
+        Task<bool> RevokeRefreshToken(User user);
         DateTime UnixTimeStampToDateTime(long unixTimeStamp);
     }
 }

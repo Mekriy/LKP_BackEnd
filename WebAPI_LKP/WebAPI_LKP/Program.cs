@@ -1,4 +1,3 @@
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -78,6 +77,7 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddEntityFrameworkStores<LkpContext>();
 
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -92,7 +92,7 @@ void SeedData(IHost app)
     using (var scope = scopedFactory.CreateScope())
     {
         var service = scope.ServiceProvider.GetService<DbInitializer>();
-        service.SeedUsers();
+        service.SeedProducts();
     }
 }
 

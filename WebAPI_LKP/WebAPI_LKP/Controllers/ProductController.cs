@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI_LKP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
-        //Create service for this controller
-        //same here, service for safety use in http endpoints
         [HttpGet]
         public IActionResult Index()
         {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI_LKP.DbContexts;
 
@@ -10,9 +11,11 @@ using WebAPI_LKP.DbContexts;
 namespace WebAPI_LKP.Migrations
 {
     [DbContext(typeof(LkpContext))]
-    partial class LkpContextModelSnapshot : ModelSnapshot
+    [Migration("20231211112316_updatedlenghsInProduct")]
+    partial class updatedlenghsInProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,16 +164,10 @@ namespace WebAPI_LKP.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId")
-                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -193,6 +190,9 @@ namespace WebAPI_LKP.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("char(36)");
+
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
@@ -202,6 +202,8 @@ namespace WebAPI_LKP.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
                 });
@@ -362,12 +364,6 @@ namespace WebAPI_LKP.Migrations
 
             modelBuilder.Entity("WebAPI_LKP.Models.Order", b =>
                 {
-                    b.HasOne("WebAPI_LKP.Models.Product", null)
-                        .WithOne("Order")
-                        .HasForeignKey("WebAPI_LKP.Models.Order", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebAPI_LKP.Models.User", null)
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -377,6 +373,10 @@ namespace WebAPI_LKP.Migrations
 
             modelBuilder.Entity("WebAPI_LKP.Models.Product", b =>
                 {
+                    b.HasOne("WebAPI_LKP.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
+
                     b.Navigation("Order");
                 });
 

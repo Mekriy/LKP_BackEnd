@@ -9,12 +9,10 @@ namespace WebAPI_LKP.Models
         [MaxLength(50)]
         public string ProductName { get; set; }
         public double Price { get; set; }
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Description { get; set; }
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Image { get; set; }
-        public Guid? OrderId { get; set; }
-        [ForeignKey("OrderId")]
         public Order? Order { get; set; }
     }
 }

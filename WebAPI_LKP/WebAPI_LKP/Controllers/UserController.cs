@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebAPI_LKP.Services.Authentication.Verifications;
 using System.Text;
 using WebAPI_LKP.Services.Authentication;
+using System.Security.Claims;
 
 namespace WebAPI_LKP.Controllers
 {
@@ -90,7 +91,7 @@ namespace WebAPI_LKP.Controllers
                         "Email needs to be confirmed"
                     },
                     Result = false
-                }); 
+                });
 
             if (!await _userService.CheckPassword(user, userLogin.Password))
                 return BadRequest(new AuthResult()
@@ -105,6 +106,45 @@ namespace WebAPI_LKP.Controllers
             var token = await _userService.GenerateJwtToken(user);
 
             return Ok(token);
+        }
+        [HttpGet("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userEmailClaim = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (userEmailClaim == null || userEmailClaim == string.Empty)
+                return Unauthorized(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "User is unauthorized!"
+                    },
+                    Result = false
+                });
+
+            var user = await _userService.GetUser(userEmailClaim);
+            if (user == null)
+                return BadRequest(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "User doesn't resist"
+                    },
+                    Result = false
+                });
+
+            await HttpContext.SignOutAsync();
+
+            if (await _userService.RevokeRefreshToken(user))
+                return Ok("Revoked all refresh tokens!");
+            else
+                return StatusCode(500, new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "Error occured while updating revoked refresh tokens"
+                    },
+                    Result= false
+                });
         }
         [AllowAnonymous]
         [HttpPost("SignUp")]
