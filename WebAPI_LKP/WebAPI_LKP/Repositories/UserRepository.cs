@@ -61,5 +61,10 @@ namespace WebAPI_LKP.Repositories
             context.RefreshTokens.Update(refreshToken);
             return await SaveAsync();
         }
+
+        public async Task<List<RefreshToken?>> GetAllRefreshTokensByUserId(string userId)
+        {
+            return await context.RefreshTokens.Where(rt => rt.UserId == userId).ToListAsync();
+        }
     }
 }

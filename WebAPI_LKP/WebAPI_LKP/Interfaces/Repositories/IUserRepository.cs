@@ -14,5 +14,6 @@ namespace WebAPI_LKP.Interfaces.Repositories
         Task<bool> CreateRefreshToken(RefreshToken refreshToken);
         Task<RefreshToken?> FindRefreshToken(string token);
         Task<bool> UpdateRefreshToken(RefreshToken refreshToken);
+        Task<List<RefreshToken?>> GetAllRefreshTokensByUserId(string userId);
     }
 }
