@@ -60,5 +60,60 @@ namespace WebAPI_LKP.Repositories
             var saved = await context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+        public async Task<bool> AddNewOrder(User user, Order order)
+        {
+            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+
+            if (myuser == null)
+            {
+                return false;
+            }
+
+            myuser.Orders.Add(order);
+
+            return await SaveAsync();
+        }
+
+        public async Task<bool> AddNewOrder(User user, List<Order> orders)
+        {
+            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+
+            if (myuser == null)
+            {
+                return false;
+            }
+
+            myuser.Orders.AddRange(orders);
+
+            return await SaveAsync();
+        }
+
+        public async Task<bool> RemoveUserOrder(User user, Order order)
+        {
+            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+
+            if (myuser == null)
+            {
+                return false;
+            }
+
+            myuser.Orders.Remove(order);
+
+            return await SaveAsync();
+        }
+
+        public async Task<bool> ClearUserOrders(User user)
+        {
+            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+
+            if (myuser == null)
+            {
+                return false;
+            }
+
+            myuser.Orders.Clear();
+
+            return await SaveAsync();
+        }
     }
 }
