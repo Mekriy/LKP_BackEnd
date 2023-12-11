@@ -28,7 +28,7 @@ namespace WebAPI_LKP.Repositories
         {
             var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
 
-            var myProduct = await context.Products.SingleOrDefaultAsync(p => p.Id == product.Id && p.OrderId == product.OrderId);
+            var myProduct = await context.Products.SingleOrDefaultAsync(p => p.Id == product.Id);
 
             if (myOrder != null && myProduct != null) 
             {

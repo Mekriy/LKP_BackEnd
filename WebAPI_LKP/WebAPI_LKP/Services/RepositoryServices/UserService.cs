@@ -260,5 +260,17 @@ namespace WebAPI_LKP.Services.RepositoryServices
 
             return dateTimeVal;
         }
+
+        public async Task<bool> RevokeRefreshToken(User user)
+        {
+            var refreshTokens = await _userRepository.GetAllRefreshTokensByUserId(user.Id.ToString());
+            foreach(var refreshToken in refreshTokens)
+            {
+                refreshToken.IsRevoked = true;
+                if (!await _userRepository.UpdateRefreshToken(refreshToken))
+                    return false;
+            }
+            return true;
+        }
     }
 }

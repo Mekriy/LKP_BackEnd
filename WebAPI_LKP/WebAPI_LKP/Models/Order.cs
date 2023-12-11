@@ -7,6 +7,7 @@ namespace WebAPI_LKP.Models
     {
         public Guid Id { get; set; }
         public Delivery Delivery { get; set; }
+        public int Quantity { get; set; }
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
 
