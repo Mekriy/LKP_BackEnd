@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebAPI_LKP.Models.Tokens;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace WebAPI_LKP.DbContexts
 {
@@ -17,7 +19,6 @@ namespace WebAPI_LKP.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Token> Tokens { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

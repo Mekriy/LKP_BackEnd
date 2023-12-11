@@ -49,9 +49,9 @@ namespace WebAPI_LKP.DbContexts
             {
                 var users = new List<User>()
                 {
-                    new User() {UserName="Oles", Email="oles@gamil.com", PasswordHash="1234", Role = Roles.Admin},
-                    new User() {UserName="Andriy", Email="andriy@gamil.com", PasswordHash="1234", Role = Roles.Admin},
-                    new User() {UserName="Dima", Email="dima@gamil.com", PasswordHash="1234", Role = Roles.Admin}
+                    new User() {UserName="Oles", Email="oles@gamil.com", PasswordHash="P@ssword123", Role = Roles.Admin},
+                    new User() {UserName="Andriy", Email="andriy@gamil.com", PasswordHash="P@ssword123", Role = Roles.Admin},
+                    new User() {UserName="Dima", Email="dima@gamil.com", PasswordHash="P@ssword123", Role = Roles.Admin}
                 };
 
                 context.Users.AddRange(users);
