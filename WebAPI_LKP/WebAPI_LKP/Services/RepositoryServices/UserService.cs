@@ -92,7 +92,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
             {
                 UserName = userSignUp.Name,
                 Email = userSignUp.Email,
-                Role = Roles.User,
+                Role = Roles.Admin,
                 EmailConfirmed = false
             };
             var isCreated = await _userManager.CreateAsync(user, userSignUp.Password);
