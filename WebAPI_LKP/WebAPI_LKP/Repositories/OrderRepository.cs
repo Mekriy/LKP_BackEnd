@@ -1,6 +1,6 @@
 ﻿using MailKit.Search;
 using Org.BouncyCastle.Asn1.X509;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Models;
 
@@ -88,5 +88,15 @@ namespace WebAPI_LKP.Repositories
             return saved > 0 ? true : false;
         }
 
+        public async Task<bool> AddOrders(List<Order> orders)
+        {
+            context.Orders.AddRange(orders);
+            return await SaveAsync();
+        }
+
+        public async Task<List<Order>> GetOrdersById(Guid userId)
+        {
+            return await context.Orders.Where(or => or.UserId == userId).ToListAsync();
+        }
     }
 }

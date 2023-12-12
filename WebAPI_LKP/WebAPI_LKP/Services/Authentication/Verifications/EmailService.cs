@@ -109,7 +109,7 @@ namespace WebAPI_LKP.Services.Authentication.Verifications
                 return false;
             }
         }
-        public async Task<string> CallbackUrl(User user, string code)
+        public Task<string> CallbackUrl(User user, string code)
         {
             //var requestScheme = _contextAccessor.HttpContext.Request.Scheme; // -- gives https
             //var requestHost = _contextAccessor.HttpContext.Request.Host; // -- gives localhost44313
@@ -117,7 +117,7 @@ namespace WebAPI_LKP.Services.Authentication.Verifications
             var ngrok = ConstantVariables.ngrok; // -- Constant variable of ngrok link, always re-generates
             var callback_url = ngrok + "/api/User/ConfirmEmail" + $"?userId={user.Id}&code={code}";
 
-            return callback_url;
+            return Task.FromResult(callback_url);
         }
         public async Task<bool> VerifyEmail(User user, string code)
         {
