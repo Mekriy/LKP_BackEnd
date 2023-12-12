@@ -10,6 +10,7 @@ using WebAPI_LKP.DbContexts;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
 using WebAPI_LKP.Models;
+using WebAPI_LKP.Models.Enums;
 using WebAPI_LKP.Repositories;
 using WebAPI_LKP.Services.Authentication.Verifications;
 using WebAPI_LKP.Services.RepositoryServices;
@@ -75,10 +76,15 @@ builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;
 })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<LkpContext>();
 
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdministratorRole",
+         policy => policy.RequireRole(nameof(Roles.Admin)));
+});
 
 var app = builder.Build();
 
