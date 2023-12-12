@@ -76,7 +76,6 @@ builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<LkpContext>();
 
 

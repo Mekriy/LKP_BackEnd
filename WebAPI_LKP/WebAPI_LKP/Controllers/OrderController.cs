@@ -1,33 +1,83 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using WebAPI_LKP.DTO;
+using WebAPI_LKP.Interfaces.Services;
+using WebAPI_LKP.Services.Authentication;
 
 namespace WebAPI_LKP.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : Controller
+    [Authorize]
+    public class OrderController : ControllerBase
     {
-        //service for safety use in http endpoints
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IOrderService _orderService;
+        private readonly IUserService _userService;
+
+        public OrderController(
+            IOrderService orderService,
+            IUserService userService)
         {
-            return View();
+            _orderService = orderService;
+            _userService = userService;
         }
-        [HttpGet("GetOrder")]
-        public async Task<IActionResult> GetOrder([FromQuery] Guid orderId)
+        [HttpGet("UserOrders")]
+        public async Task<IActionResult> GetUserOrders()
         {
-            return Ok();
+            var userEmailClaims = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userService.GetUser(userEmailClaims);
+
+            if (user == null)
+                return NotFound(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "No user found!"
+                    },
+                    Result = false
+                });
+
+            var userOrders = await _orderService.GetUserOrders(user.Id);
+            if (userOrders == null || userOrders.Count == 0)
+                return NotFound(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "There is no orders for this user!"
+                    },
+                    Result = false
+                });
+            return Ok(userOrders);
         }
-        [HttpPost("CreateOrder")]
-        public async Task<IActionResult> CreateOrder()
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateOrder([FromBody] List<OrderDTO> menuList)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "Invalid parameters",
+                        ModelState.ToString()
+                    },
+                    Result = false
+                });
+
+            var userEmailClaims = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userService.GetUser(userEmailClaims);
+
+            if(await _orderService.CreateOrder(menuList, user))
+                return Ok();
+            else
+                return BadRequest();
         }
-        [HttpPut("UpdateOrder")]
+        [HttpPut("Update")]
         public async Task<IActionResult> UpdateOrder()
         {
             return Ok();
         }
-        [HttpDelete("DeleteOrder")]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteOrder()
         {
             return Ok();

@@ -1,9 +1,14 @@
-﻿namespace WebAPI_LKP.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebAPI_LKP.DTO
 {
     public class UserSignUpDTO
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Email { get; set; }
+        [Required]
+        public string? Password { get; set; }
     }
 }

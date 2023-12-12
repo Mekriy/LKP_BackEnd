@@ -1,35 +1,48 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI_LKP.Interfaces.Services;
 using WebAPI_LKP.Models.Enums;
+using WebAPI_LKP.Services.Authentication;
 
 namespace WebAPI_LKP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ProductController : Controller
+    public class ProductController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IProductService _productService;
+        public ProductController(IProductService productService)
         {
-            return View();
+            _productService = productService;
         }
-        [HttpGet("GetProduct")]
-        public async Task<IActionResult> GetProduct([FromQuery] Guid ProductId)
+        [AllowAnonymous]
+        [HttpGet("getProducts")]
+        public async Task<IActionResult> GetProducts()
         {
-            return Ok();
+            var products = await _productService.GetAllProducts();
+            if (products == null || products.Count == 0)
+                return BadRequest(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "Error while fetching list of products from database"
+                    },
+                    Result = false
+                });
+            return Ok(products);
         }
-        [HttpPost("CreateProduct")]
+        [HttpPost("Create")]
         public async Task<IActionResult> CreateProduct()
         {
             return Ok();
         }
-        [HttpPut("UpdateProduct")]
+        [HttpPut("Update")]
         public async Task<IActionResult> UpdateProduct()
         {
             return Ok();
         }
-        [HttpDelete("DeleteProduct")]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteProduct()
         {
             return Ok();
