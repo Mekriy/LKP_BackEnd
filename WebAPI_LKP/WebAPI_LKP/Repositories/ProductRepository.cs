@@ -1,25 +1,26 @@
 ﻿using WebAPI_LKP.Models;
 using WebAPI_LKP.Interfaces.Repositories;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+using WebAPI_LKP.DbContexts;
 
 namespace WebAPI_LKP.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        readonly DbContexts.LkpContext context;
-        public ProductRepository(DbContexts.LkpContext context)
+        private readonly LkpContext _context;
+        public ProductRepository(LkpContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public async Task<List<Product>> GetAllProducts()
         {
-            return await context.Products.ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public async Task<Product?> GetProductById(Guid productId)
         {
-            return await context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
         }
     }
 }
