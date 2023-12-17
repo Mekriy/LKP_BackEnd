@@ -1,4 +1,5 @@
-﻿using WebAPI_LKP.DTO;
+﻿using MailKit.Search;
+using WebAPI_LKP.DTO;
 using WebAPI_LKP.Interfaces.Repositories;
 using WebAPI_LKP.Interfaces.Services;
 using WebAPI_LKP.Models;
@@ -40,6 +41,44 @@ namespace WebAPI_LKP.Services.RepositoryServices
             }).ToList();
 
             return orderDtos;
+        }
+
+        public async Task<OrderDTO> GetOrder(Guid orderId)
+        {
+            var order = await _orderRepository.GetOrderById(orderId);
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            var orderDto = new OrderDTO
+            {
+                Delivery = order.Delivery,
+                Quantity = order.Quantity,
+                ProductId = order.ProductId,
+            };
+
+            return orderDto;
+        }
+
+        public async Task<bool> UpdateOrder(OrderDTO updateOrder, User user)
+        {
+            var order = new Order()
+            {
+                Id = updateOrder.OrderId,
+                Delivery = updateOrder.Delivery,
+                ProductId = updateOrder.ProductId,
+                Quantity = updateOrder.Quantity,
+                UserId = user.Id,
+            };
+
+            return await _orderRepository.UpdateOrder(order);
+        }
+
+        public async Task<bool> DeleteOrder(Guid orderId)
+        {
+            return await _orderRepository.DeleteOrder(orderId);
         }
     }
 }

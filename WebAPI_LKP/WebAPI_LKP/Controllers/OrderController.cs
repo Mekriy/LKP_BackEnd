@@ -73,14 +73,62 @@ namespace WebAPI_LKP.Controllers
                 return BadRequest();
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateOrder()
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderDTO updateOrder)
         {
-            return Ok();
+            if (updateOrder == null)
+            { 
+                return NotFound(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "Order not found!",
+                        ModelState.ToString()
+                    },
+                    Result = false
+                });
+            }
+
+            var userEmailClaims = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userService.GetUser(userEmailClaims);
+
+            if (await _orderService.UpdateOrder(updateOrder, user))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+
+                        "Failed to update order!",
+                        ModelState.ToString()
+                    },
+                    Result = false
+                });
+            }
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> DeleteOrder()
+        public async Task<IActionResult> DeleteOrder(Guid orderId)
         {
-            return Ok();
+            if(await _orderService.DeleteOrder(orderId))
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound(new AuthResult()
+                {
+                    Errors = new List<string>()
+                    {
+                        "Somth went wrong!",
+                        ModelState.ToString()
+                    },
+                    Result = false
+                });
+            }
+
         }
     }
 }
