@@ -18,13 +18,13 @@ namespace WebAPI_LKP.Services.RepositoryServices
 
         public async Task<bool> CreateOrder(List<OrderDTO> orderDtoList, User user)
         {
-            // Create a list of Order entities using LINQ
             var orders = orderDtoList.Select(orderDto => new Order
             {
                 ProductId = orderDto.ProductId,
                 Delivery = orderDto.Delivery,
                 Quantity = orderDto.Quantity,
-                UserId = user.Id
+                UserId = user.Id,
+                CreatedDate = DateTime.Now,
             }).ToList();
 
             return await _orderRepository.AddOrders(orders);

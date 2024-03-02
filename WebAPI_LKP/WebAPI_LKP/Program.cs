@@ -81,8 +81,8 @@ builder.Services.AddDefaultIdentity<User>(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdministratorRole",
-         policy => policy.RequireRole(nameof(Roles.Admin)));
+    options.AddPolicy("RequiredAdmin",
+         policy => policy.RequireClaim("Role", "Admin"));
 });
 
 var app = builder.Build();

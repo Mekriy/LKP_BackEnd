@@ -92,7 +92,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
             {
                 UserName = userSignUp.Name,
                 Email = userSignUp.Email,
-                Role = Roles.User,
+                Role = "User",
                 EmailConfirmed = false
             };
             var isCreated = await _userManager.CreateAsync(user, userSignUp.Password);
@@ -115,6 +115,7 @@ namespace WebAPI_LKP.Services.RepositoryServices
                     new Claim(JwtRegisteredClaimNames.Email, value: user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, value: DateTime.Now.ToUniversalTime().ToString()),
+                    new Claim("Role", user.Role)
                 }),
                 Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_configuration.GetSection("JWT:ExpiryTimeFrame").Value)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

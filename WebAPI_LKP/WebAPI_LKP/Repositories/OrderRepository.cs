@@ -15,69 +15,6 @@ namespace WebAPI_LKP.Repositories
             this.context = context;
         }
 
-        public async Task<bool> CreateOrder(User user, Order order, Product product)
-        {
-            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
-
-            if (myuser == null)
-            {
-                return false;
-            }
-
-            order.ProductId = product.Id;
-
-            myuser.Orders.Add(order);
-
-            return await SaveAsync();
-        }
-        public async Task<bool> RemoveOrder(User user, Order order)
-        {
-            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
-
-            if (myuser == null)
-            {
-                return false;
-            }
-
-            myuser.Orders.Remove(order);
-
-            return await SaveAsync();
-        }
-        public async Task<bool> ClearUserOrders(User user)
-        {
-            var myuser = await context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
-
-            if (myuser == null)
-            {
-                return false;
-            }
-
-            myuser.Orders.Clear();
-
-            return await SaveAsync();
-        }
-        public async Task<bool> ClearOrder(Order order)
-        {
-            var myOrder = await context.Orders.SingleOrDefaultAsync(o => o.Id == order.Id);
-
-            if (myOrder != null)
-            {
-                myOrder.ProductId = Guid.Empty;
-            }
-
-            return await SaveAsync();
-        }
-        public async Task<bool> AddToOrder(Order order, Product product)
-        {
-            var myOrder = await context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
-
-            if (myOrder != null)
-            {
-                myOrder.ProductId = product.Id;
-            }
-
-            return await SaveAsync();
-        }
         public async Task<Order?> GetOrderById(Guid orderId)
         {
             return await context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI_LKP.DbContexts;
 
@@ -10,9 +11,11 @@ using WebAPI_LKP.DbContexts;
 namespace WebAPI_LKP.Migrations
 {
     [DbContext(typeof(LkpContext))]
-    partial class LkpContextModelSnapshot : ModelSnapshot
+    [Migration("20231223212456_withDateTime")]
+    partial class withDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

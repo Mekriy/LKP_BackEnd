@@ -6,7 +6,7 @@ namespace WebAPI_LKP.Models
 {
     public class User : IdentityUser<Guid>
     {
-        public Roles Role { get; set; } = Roles.User;
+        public string Role {  get; set; }
         public List<Order> Orders { get; set; }
     }
 }

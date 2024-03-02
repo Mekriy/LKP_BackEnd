@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI_LKP.DbContexts;
 
@@ -10,9 +11,11 @@ using WebAPI_LKP.DbContexts;
 namespace WebAPI_LKP.Migrations
 {
     [DbContext(typeof(LkpContext))]
-    partial class LkpContextModelSnapshot : ModelSnapshot
+    [Migration("20231221134557_StringRoles")]
+    partial class StringRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,9 +157,6 @@ namespace WebAPI_LKP.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Delivery")
                         .HasColumnType("int");

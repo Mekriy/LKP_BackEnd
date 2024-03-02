@@ -10,6 +10,7 @@ namespace WebAPI_LKP.Models
         public int Quantity { get; set; }
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [NotMapped]
         public double TotalPrice { get; private set; }
